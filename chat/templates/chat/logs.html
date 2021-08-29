@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Logging</title>
+</head>
+
+<body>
+    <h1>{{user_id}}: Scraping...</h1>
+    <textarea id="log-area" cols="100" rows="20"></textarea><br/>
+    <input id="start-process-btn" type="button" value="Send"/>
+</body>
+
+<script>
+    var userId = '{{ user_id }}';
+
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/ws/chat/' + userId + '/');
+
+    chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var message = data['message'];
+        document.querySelector('#log-area').value += (message + '\n');
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#start-process-btn').onclick = function(e) {
+        chatSocket.send('');
+        console.log('send finished');
+    };
+</script>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    
+    <form method="POST" action="{% url 'autoMachine:submitScrap' %}">{% csrf_token %}
+
+        <input type="date" name="postDate" >
+        <input type="submit" id="btnSubmit" value="주문취합실행">
+        <br>
+        <br>
+        <br>
+
+        <button onclick="run()">실행</button>
+
+    </form>
+
+    
+
+    <div id="dataResult"></div>
+
+</body>
+
+<script>
+    function run(){
+          const xhttp = new XMLHttpRequest();
+          xhttp.onload = function() {
+          let result = JSON.parse(this.responseText);
+            document.getElementById("dataResult").innerHTML = result.msg;
+            }
+          xhttp.open("GET", "{% url 'autoMachine:scrap' %}", true);
+          xhttp.send();
+    }
+</script>
+</html>
